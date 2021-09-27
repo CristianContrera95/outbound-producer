@@ -34,6 +34,7 @@ def launch_campaign(campaign_id, graphql, sqs, wpp_client):
         for idx, contact in enumerate(campaign.contacts):
             if contacts_wpp[contact.number]['status'] == 'valid':
                 messages[contact.number] = {
+                    'id': str(contact.id),
                     "to": contacts_wpp[contact.number]['wa_id'],
                     "type": "template",
                     "namespace": campaign.template.namespace,
@@ -43,7 +44,7 @@ def launch_campaign(campaign_id, graphql, sqs, wpp_client):
                     "campaign_uid": campaign_id,
                     "account_id": str(account_id),
                     "from": campaign.channel.value,
-                    "last_campaign_msg": idx + 1 == campaign_len
+                    "last_campaign_msg": idx == campaign_len - 1
                 }
                 valid_numbers.append(contact.number)
             else:

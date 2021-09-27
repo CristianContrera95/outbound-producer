@@ -35,6 +35,7 @@ def get_campaign(campaign_uid: str, graphql, raw=False):
                   content
                 }}
                 contacts {{
+                  id
                   variables
                   contact {{
                     number
@@ -58,7 +59,7 @@ def get_campaign(campaign_uid: str, graphql, raw=False):
         # 'contacts': [
         # {'name': 'Cristian celu', 'number': '+5493546476307', 'variables': {'1': 'Cristian'}},
         # {'name': ..}]
-        campaign['contacts'] = list(map(lambda x: {**x['contact'], 'variables': json.dumps(x['variables'])
+        campaign['contacts'] = list(map(lambda x: {'id': x['id'], **x['contact'], 'variables': json.dumps(x['variables'])
                                         if isinstance(x['variables'], dict) else x['variables']},
                                         campaign['contacts']))
 
@@ -83,7 +84,7 @@ def update_campaign_contact(campaign_uid: str, contacts_uid: List[str], status: 
         _set: {{
           event_status_id: {status.value}
           error_description: "{error_desc}"
-          msg_cost: 0.0
+          msg_cost: 0
           last_update: "{dt.datetime.now()}"
         }}
         )

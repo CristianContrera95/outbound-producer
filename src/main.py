@@ -57,25 +57,12 @@ def handle_campaign(event, context=None):
 
     check_clients()
 
-    try:
-        campaign_uid = event.get('campaign_id')
-        launch_campaign(campaign_uid, graphql, sqs, wpp_client)
-        return {
-            "statusCode": 200
-        }
-    except InvalidData as err:
-        logger.exception(f'Exception with key Error')
-        return {
-            "statusCode": 400,
-            "body": str(err.message)
-        }
-    except Exception as err:
-        logger.exception(f'Exception unknown')
-        return {
-            "statusCode": 500,
-            "body": str(err)
-        }
+    campaign_uid = event.get('campaign_id')
+    launch_campaign(campaign_uid, graphql, sqs, wpp_client)
+    return {
+        "statusCode": 200
+    }
 
 
-if __name__ == "__main__":
-    print(handle_campaign({'campaign_id': "eeea0af6-811d-4b27-ac39-fb830d04ad30"}))
+# if __name__ == "__main__":
+#     print(handle_campaign({'campaign_id': "2bebbfd9-71c9-48e2-99db-e94ca1b0e713"}))

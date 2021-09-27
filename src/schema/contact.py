@@ -8,7 +8,7 @@ TABLE_NAME = 'contact'
 
 class Contact(BaseModel):
     """Databricks models"""
-    # id: Optional[UUID]
+    id: Optional[UUID]
     number: str
     variables: Json = {}
 
