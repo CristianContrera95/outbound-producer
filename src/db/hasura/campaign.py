@@ -95,3 +95,25 @@ def update_campaign_contact(campaign_uid: str, contacts_uid: List[str], status: 
     """.replace("'", '"'))
 
     return affected_rows
+
+
+def update_campaign(campaign_uid: str, status: eventStatus, graphql):
+    try:
+        graphql.query(f"""
+          mutation UpdateStatus {{
+            update_campaign(
+            where: {{ 
+              id: {{_eq: "{campaign_uid}"}}
+            }},
+            _set: {{
+              status: {status.value}
+              updated_at: "{dt.datetime.now()}"
+            }}
+            )
+            {{
+            affected_rows
+            }}
+          }}
+        """)
+    except TransportQueryError as err:
+        raise InvalidData(f"Invalid campaign_uid: {campaign_uid}")

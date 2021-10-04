@@ -44,18 +44,21 @@ def launch_campaign(campaign_id, graphql, sqs, wpp_client):
                     "campaign_uid": campaign_id,
                     "account_id": str(account_id),
                     "from": campaign.channel.value,
-                    "last_campaign_msg": idx == campaign_len - 1
+                    "last_campaign_msg": False
                 }
                 valid_numbers.append(contact.number)
             else:
                 bad_numbers.append(contact.number)
 
         if valid_numbers:
+            messages[valid_numbers[-1]].update({"last_campaign_msg": True})
             campaign_db.update_campaign_contact(campaign_id,
                                                 list(valid_numbers),
                                                 campaign_db.eventStatus.pending,
                                                 graphql,
                                                 '')
+        else:
+            campaign_db.update_campaign(campaign_id, campaign_db.eventStatus.done, graphql=graphql)
         if bad_numbers:
             campaign_db.update_campaign_contact(campaign_id,
                                                 list(bad_numbers),
